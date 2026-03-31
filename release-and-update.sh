@@ -1,6 +1,6 @@
 #!/usr/bin/env zsh
 # Release a new version of nevo-git and update the Homebrew formula.
-# Usage: ./release.sh ["commit message"]
+# Usage: ./release-and-update.sh ["commit message"]
 
 set -e
 
@@ -48,6 +48,11 @@ cd "$FORMULA_REPO"
 git add -A
 git commit -m "bump to $NEW_TAG ($MESSAGE)"
 git push
+# 5. Update local brew
 echo ""
-echo "Done! Released $NEW_TAG"
-echo "Users can run: brew update && brew upgrade nevo-git"
+echo "Updating local brew..."
+brew update
+brew upgrade nevo-git
+
+echo ""
+echo "Done! Released and installed $NEW_TAG"

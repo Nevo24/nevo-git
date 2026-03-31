@@ -105,7 +105,7 @@ Type `nevo-git` in your terminal to see all commands.
 After editing `nevo-git.zsh`, run:
 
 ```bash
-./release.sh "description of changes"
+./release-and-update.sh "description of changes"
 ```
 
 This will:
@@ -117,7 +117,7 @@ This will:
 If you've already committed, you can run it without changes — it will just tag and release:
 
 ```bash
-./release.sh
+./release-and-update.sh
 ```
 
 ### Repo structure
@@ -125,7 +125,7 @@ If you've already committed, you can run it without changes — it will just tag
 | File | Purpose |
 |------|---------|
 | `nevo-git.zsh` | The plugin (all commands + help) |
-| `release.sh` | Automated release script |
+| `release-and-update.sh` | Release to GitHub + update local brew |
 | [`homebrew-nevo`](https://github.com/Nevo24/homebrew-nevo) | The Homebrew tap (separate repo) |
 
 ## License
