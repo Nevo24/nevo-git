@@ -15,6 +15,17 @@ prompt='%10/ ${vcs_info_msg_0_}> '
 __nevo_git_precmd() { vcs_info }
 precmd_functions+=(__nevo_git_precmd)
 
+# ─── Diff/Merge Tool (auto-configured) ───────────────────────────────────────
+
+__nevo_git_wrapper="${0:A:h}/git-diff-merge-wrapper.sh"
+if [[ -x "$__nevo_git_wrapper" ]]; then
+    git config --global diff.tool custom
+    git config --global difftool.custom.cmd "$__nevo_git_wrapper diff \$LOCAL \$REMOTE"
+    git config --global merge.tool custom
+    git config --global mergetool.custom.cmd "$__nevo_git_wrapper merge \$LOCAL \$BASE \$REMOTE \$MERGED"
+    git config --global mergetool.custom.trustExitCode true
+fi
+
 # ─── Aliases ──────────────────────────────────────────────────────────────────
 
 alias gits="git status"
@@ -282,6 +293,11 @@ nevo-git — Git shortcuts and worktree management
 
 PROMPT
   Purple git branch in prompt (auto-configured)
+
+DIFF/MERGE TOOL
+  Auto-configured in git. Detects project type and opens:
+    Android Studio, IntelliJ, PyCharm, or GoLand
+  Falls back to opendiff or plain diff if none installed.
 
 ALIASES
   gits              git status
