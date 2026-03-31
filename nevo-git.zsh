@@ -10,6 +10,7 @@ alias glog="git log --name-only"
 alias gco="git checkout"
 alias gpull="git pull --rebase origin main"
 alias gpush="git push"
+alias gpushl="git push --force-with-lease"
 alias gbranch="git branch"
 alias gec="git commit --allow-empty -m 'Trigger deploy'"
 alias conflicts='git mergetool -y'
@@ -17,7 +18,7 @@ alias grc='git rebase --continue'
 alias ga='git add --all && git commit --amend'
 alias gresetc='greset $(git rev-parse --abbrev-ref HEAD)'
 alias grebasec='grebase $(git rev-parse --abbrev-ref HEAD)'
-alias git-untrack='f() { git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"; }; f'
+alias guntrack='f() { git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"; }; f'
 alias reflog='git reflog --date=unix'
 alias gsu='git submodule update --init --recursive'
 
@@ -261,6 +262,7 @@ ALIASES
   gco               git checkout
   gpull             git pull --rebase origin main
   gpush             git push
+  gpushl            git push --force-with-lease
   gbranch           git branch
   gdiff             difftool against a branch/commit
   gdm               difftool against origin's main branch
@@ -270,7 +272,7 @@ ALIASES
   gsu               git submodule update --init --recursive
   conflicts         git mergetool -y
   reflog            git reflog --date=unix
-  git-untrack <f>   remove file from tracking + add to .gitignore
+  guntrack <f>      remove file from tracking + add to .gitignore
 
 BRANCH OPERATIONS
   gcom              checkout the main branch (auto-detected)
