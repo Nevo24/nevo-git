@@ -111,10 +111,10 @@ gdelete() {
     fi
 }
 
-new_commit() {
+gnewcommit() {
     if [ -z "$1" ]; then
         echo "Error: Please provide a new commit message as an argument."
-        echo "Usage: new_commit \"Your new commit message here\""
+        echo "Usage: gnewcommit \"Your new commit message here\""
         return 1
     fi
     git commit --allow-empty --amend -m "$1"
@@ -312,7 +312,7 @@ BRANCH OPERATIONS
   grebasemy [br]    rebase keeping your changes on conflicts (-X ours)
   grename <new>     rename current branch (or: grename <old> <new>)
   gdelete <branch>  delete branch locally and on remote (confirms first)
-  new_commit "msg"  amend last commit with a new message (allow-empty)
+  gnewcommit "msg"  amend last commit with a new message (allow-empty)
   gmr               open the GitLab MR for the current branch in browser
   gpr               open the GitHub PR for the current branch in browser
 
