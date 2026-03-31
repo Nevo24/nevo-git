@@ -94,6 +94,38 @@ Type `nevo-git` in your terminal to see all commands.
 - `$GITLAB_TOKEN` env var (for `gmr`)
 - `$GITHUB_TOKEN` env var (for `gpr`)
 
+---
+
+## For Maintainers
+
+### Releasing a new version
+
+After editing `nevo-git.zsh`, run:
+
+```bash
+./release.sh "description of changes"
+```
+
+This will:
+1. Commit and push your changes
+2. Auto-bump the patch version and create a git tag
+3. Update the Homebrew formula with the new SHA
+4. Push the formula to `homebrew-nevo`
+
+If you've already committed, you can run it without changes — it will just tag and release:
+
+```bash
+./release.sh
+```
+
+### Repo structure
+
+| File | Purpose |
+|------|---------|
+| `nevo-git.zsh` | The plugin (all commands + help) |
+| `release.sh` | Automated release script |
+| [`homebrew-nevo`](https://github.com/Nevo24/homebrew-nevo) | The Homebrew tap (separate repo) |
+
 ## License
 
 MIT
