@@ -2,6 +2,21 @@
 # nevo-git — Git aliases and functions by Nevo Mashiach
 # Source this file in your .zshrc:  source "$(brew --prefix)/share/nevo-git/nevo-git.zsh"
 
+# ─── Prompt (purple git branch) ──────────────────────────────────────────────
+
+autoload -Uz vcs_info
+zstyle ':vcs_info:*' enable git svn
+zstyle ':vcs_info:git*' formats "- ($(tput setaf 5)%b$(tput sgr0)) "
+
+setopt prompt_subst
+prompt='%10/ ${vcs_info_msg_0_}> '
+
+# Hook: refresh vcs_info before each prompt
+if (( ! ${precmd_functions[(I)__nevo_git_precmd]} )); then
+    __nevo_git_precmd() { vcs_info }
+    precmd_functions+=(__nevo_git_precmd)
+fi
+
 # ─── Aliases ──────────────────────────────────────────────────────────────────
 
 alias gits="git status"
@@ -255,6 +270,9 @@ wtrm() {
 nevo-git() {
     cat <<'HELP'
 nevo-git — Git shortcuts and worktree management
+
+PROMPT
+  Purple git branch in prompt (auto-configured)
 
 ALIASES
   gits              git status
