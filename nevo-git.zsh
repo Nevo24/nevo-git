@@ -98,7 +98,7 @@ gdm() {
     gdiff origin/$branch
 }
 
-mr() {
+gmr() {
     git rev-parse --is-inside-work-tree &>/dev/null || { echo "No git project"; return 1; }
     local url=$(git_url)
     local branch=$(git branch --show-current)
@@ -113,7 +113,7 @@ mr() {
     /usr/bin/open "$mr_url"
 }
 
-pr() {
+gpr() {
     git rev-parse --is-inside-work-tree &>/dev/null || { echo "No git project"; return 1; }
     local url=$(git_url)
     local branch=$(git branch --show-current)
@@ -281,8 +281,8 @@ BRANCH OPERATIONS
   grebasemy [br]    rebase keeping your changes on conflicts (-X ours)
   gdelete <branch>  delete branch locally and on remote (confirms first)
   new_commit "msg"  amend last commit with a new message (allow-empty)
-  mr                open the GitLab MR for the current branch in browser
-  pr                open the GitHub PR for the current branch in browser
+  gmr               open the GitLab MR for the current branch in browser
+  gpr               open the GitHub PR for the current branch in browser
 
 UTILITIES
   find_main_branch  detect the repo's default branch (main/master/etc)
