@@ -1,25 +1,13 @@
 #!/usr/bin/env zsh
 # Release a new version of nevo-git and update the Homebrew formula.
-# Usage: ./release.sh "commit message"
+# Usage: ./release.sh ["commit message"]
 
 set -e
 
 FORMULA_REPO="$HOME/workspace/homebrew-nevo"
 FORMULA_FILE="$FORMULA_REPO/Formula/nevo-git.rb"
 
-# Require a commit message
-if [[ -z "$1" ]]; then
-    echo "Usage: ./release.sh \"commit message\""
-    return 1 2>/dev/null || exit 1
-fi
-
-MESSAGE="$1"
-
-# Check for uncommitted changes
-if [[ -z "$(git status --porcelain)" ]]; then
-    echo "No changes to commit."
-    return 1 2>/dev/null || exit 1
-fi
+MESSAGE="${1:-release}"
 
 # Get current version from the latest tag and bump patch
 LATEST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "v0.0.0")
@@ -32,9 +20,11 @@ echo "Current: $LATEST_TAG -> New: $NEW_TAG"
 echo "Message: $MESSAGE"
 echo ""
 
-# 1. Commit, tag, push
-git add -A
-git commit -m "$MESSAGE"
+# 1. Commit if there are changes, then tag and push
+if [[ -n "$(git status --porcelain)" ]]; then
+    git add -A
+    git commit -m "$MESSAGE"
+fi
 git tag "$NEW_TAG"
 git push
 git push origin "$NEW_TAG"
