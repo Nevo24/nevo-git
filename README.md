@@ -17,6 +17,12 @@ source "$(brew --prefix)/share/nevo-git/nevo-git.zsh"
 
 Then restart your shell or run `source ~/.zshrc`.
 
+## Update
+
+```bash
+brew update && brew upgrade nevo-git
+```
+
 ## What you get
 
 - Purple git branch in your prompt (auto-configured)
@@ -60,8 +66,9 @@ Type `nevo-git` in your terminal to see all commands.
 | `grebase [branch]` | `pull --rebase` from origin/branch |
 | `grebasec` | `grebase` on the current branch |
 | `grebasemy [branch]` | rebase keeping your changes on conflicts (`-X ours`) |
+| `grename <new>` | rename current branch (or `grename <old> <new>`) |
 | `gdelete <branch>` | delete branch locally and on remote (confirms first) |
-| `new_commit "msg"` | amend last commit with a new message |
+| `gnewcommit "msg"` | amend last commit with a new message |
 | `gmr` | open the GitLab MR for the current branch in browser |
 | `gpr` | open the GitHub PR for the current branch in browser |
 

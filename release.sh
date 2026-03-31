@@ -50,4 +50,4 @@ git commit -m "bump to $NEW_TAG ($MESSAGE)"
 git push
 echo ""
 echo "Done! Released $NEW_TAG"
-echo "Users can run: brew upgrade nevo-git"
+echo "Users can run: brew update && brew upgrade nevo-git"
