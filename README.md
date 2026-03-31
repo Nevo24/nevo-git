@@ -15,6 +15,8 @@ Add to your `~/.zshrc`:
 source "$(brew --prefix)/share/nevo-git/nevo-git.zsh"
 ```
 
+This gives you all the git commands and a purple git branch in your prompt.
+
 Then restart your shell or run `source ~/.zshrc`.
 
 ## Update
@@ -25,7 +27,7 @@ brew update && brew upgrade nevo-git
 
 ## What you get
 
-- Purple git branch in your prompt (auto-configured)
+- Purple git branch in your prompt (included automatically, no extra config needed)
 - Short aliases for everyday git commands
 - Smart branch operations that auto-detect `main`/`master`
 - Worktree management with a simple `wt` command
