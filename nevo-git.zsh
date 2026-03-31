@@ -12,10 +12,8 @@ setopt prompt_subst
 prompt='%10/ ${vcs_info_msg_0_}> '
 
 # Hook: refresh vcs_info before each prompt
-if (( ! ${precmd_functions[(I)__nevo_git_precmd]} )); then
-    __nevo_git_precmd() { vcs_info }
-    precmd_functions+=(__nevo_git_precmd)
-fi
+__nevo_git_precmd() { vcs_info }
+precmd_functions+=(__nevo_git_precmd)
 
 # ─── Aliases ──────────────────────────────────────────────────────────────────
 
