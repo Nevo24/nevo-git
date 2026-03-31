@@ -26,13 +26,13 @@ alias gpush="git push"
 alias gpushl="git push --force-with-lease"
 alias gbranch="git branch"
 alias gec="git commit --allow-empty -m 'Trigger deploy'"
-alias conflicts='git mergetool -y'
+alias gconflicts='git mergetool -y'
 alias grc='git rebase --continue'
 alias ga='git add --all && git commit --amend'
 alias gresetc='greset $(git rev-parse --abbrev-ref HEAD)'
 alias grebasec='grebase $(git rev-parse --abbrev-ref HEAD)'
 alias guntrack='f() { git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"; }; f'
-alias reflog='git reflog --date=unix'
+alias greflog='git reflog --date=unix'
 alias gsu='git submodule update --init --recursive'
 
 # ─── Utility Functions ────────────────────────────────────────────────────────
@@ -297,8 +297,8 @@ ALIASES
   ga                stage all + amend last commit
   grc               git rebase --continue
   gsu               git submodule update --init --recursive
-  conflicts         git mergetool -y
-  reflog            git reflog --date=unix
+  gconflicts        git mergetool -y
+  greflog           git reflog --date=unix
   guntrack <f>      remove file from tracking + add to .gitignore
 
 BRANCH OPERATIONS

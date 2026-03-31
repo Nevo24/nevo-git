@@ -54,8 +54,8 @@ Type `nevo-git` in your terminal to see all commands.
 | `ga` | stage all + amend last commit |
 | `grc` | `git rebase --continue` |
 | `gsu` | `git submodule update --init --recursive` |
-| `conflicts` | `git mergetool -y` |
-| `reflog` | `git reflog --date=unix` |
+| `gconflicts` | `git mergetool -y` |
+| `greflog` | `git reflog --date=unix` |
 | `guntrack <file>` | remove file from tracking + add to `.gitignore` |
 
 ### Branch Operations
