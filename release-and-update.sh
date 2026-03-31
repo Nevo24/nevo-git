@@ -25,15 +25,37 @@ if [[ -n "$(git status --porcelain)" ]]; then
     git add -A
     git commit -m "$MESSAGE"
 fi
+# Clean up stale local/remote tag if it exists from a failed run
+if git rev-parse "$NEW_TAG" &>/dev/null; then
+    echo "Tag $NEW_TAG already exists locally, removing..."
+    git tag -d "$NEW_TAG"
+fi
+git push origin :refs/tags/"$NEW_TAG" 2>/dev/null || true
+
 git tag "$NEW_TAG"
 git push
 git push origin "$NEW_TAG"
 echo "Pushed $NEW_TAG to nevo-git"
 
-# 2. Get the tarball SHA
+# 2. Get the tarball SHA (retry to handle GitHub's tarball generation delay)
 REPO_URL=$(git remote get-url origin | sed 's|git@github.com:|https://github.com/|; s|\.git$||; s|https://[^@]*@github.com/|https://github.com/|')
 TARBALL_URL="${REPO_URL}/archive/refs/tags/${NEW_TAG}.tar.gz"
-SHA=$(curl -sL "$TARBALL_URL" | shasum -a 256 | cut -d' ' -f1)
+
+SHA=""
+for i in 1 2 3; do
+    SHA=$(curl -sL -o /dev/null -w "%{http_code}" "$TARBALL_URL")
+    if [[ "$SHA" == "200" ]]; then
+        SHA=$(curl -sL "$TARBALL_URL" | shasum -a 256 | cut -d' ' -f1)
+        break
+    fi
+    echo "Waiting for GitHub to generate tarball (attempt $i/3)..."
+    sleep 3
+done
+
+if [[ -z "$SHA" || ${#SHA} -ne 64 ]]; then
+    echo "Error: Failed to get valid SHA for tarball"
+    exit 1
+fi
 echo "SHA256: $SHA"
 
 # 3. Update the formula

@@ -32,7 +32,12 @@ fi
 # ─── Aliases ──────────────────────────────────────────────────────────────────
 
 alias gits="git status"
-gdiff() { git add -N . && git difftool -d "$@"; }
+gdiff() {
+    git add -N . && git difftool -d "$@"
+    local ret=$?
+    git diff --name-only --diff-filter=A | xargs -r git reset -q -- 2>/dev/null
+    return $ret
+}
 alias glog="git log --name-only"
 alias gco="git checkout"
 gpull() { git pull --rebase origin "$(find_main_branch)"; }
@@ -150,6 +155,10 @@ gdm() {
 gmr() {
     git rev-parse --is-inside-work-tree &>/dev/null || { echo "No git project"; return 1; }
     local url=$(git_url)
+    if [[ "$url" != *gitlab* ]]; then
+        echo "Not a GitLab repo. Use gpr for GitHub."
+        return 1
+    fi
     local branch=$(git branch --show-current)
     local project=$(echo "$url" | sed 's#https://\([^/]*\)/\(.*\)#\1/\2#; s/\.git$//')
     local host=${project%%/*}
@@ -165,6 +174,10 @@ gmr() {
 gpr() {
     git rev-parse --is-inside-work-tree &>/dev/null || { echo "No git project"; return 1; }
     local url=$(git_url)
+    if [[ "$url" != *github.com* ]]; then
+        echo "Not a GitHub repo. Use gmr for GitLab."
+        return 1
+    fi
     local branch=$(git branch --show-current)
     local owner_repo=$(echo "$url" | sed 's#https://github.com/##; s/\.git$//')
     local pr_url=$(/usr/bin/curl -s -H "Authorization: token $GITHUB_TOKEN" \
