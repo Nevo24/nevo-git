@@ -28,6 +28,7 @@ brew update && brew upgrade nevo-git
 ## What you get
 
 - Purple git branch in your prompt (included automatically, no extra config needed)
+- Smart diff/merge tool — auto-detects your project (Python/Go/Java/Android) and opens the right IDE. Falls back to opendiff or plain diff
 - Short aliases for everyday git commands
 - Smart branch operations that auto-detect `main`/`master`
 - Worktree management with a simple `wt` command
@@ -44,7 +45,7 @@ Type `nevo-git` in your terminal to see all commands.
 | `gits` | `git status` |
 | `glog` | `git log --name-only` |
 | `gco` | `git checkout` |
-| `gpull` | `git pull --rebase origin main` |
+| `gpull` | `git pull --rebase` from origin's main branch (auto-detected) |
 | `gpush` | `git push` |
 | `gpushl` | `git push --force-with-lease` |
 | `gbranch` | `git branch` |

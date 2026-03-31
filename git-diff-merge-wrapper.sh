@@ -80,10 +80,10 @@ __build_cache() {
         "Android Studio" "com.google.android.studio" "studio")
 
     cat > "$CACHE_FILE" <<EOF
-PYCHARM_BIN="$pycharm"
-GOLAND_BIN="$goland"
-IDEA_BIN="$idea"
-ANDROID_STUDIO_BIN="$android_studio"
+PYCHARM_BIN='$pycharm'
+GOLAND_BIN='$goland'
+IDEA_BIN='$idea'
+ANDROID_STUDIO_BIN='$android_studio'
 EOF
     source "$CACHE_FILE"
 }
@@ -120,16 +120,18 @@ __run_tool() {
 }
 
 __run_fallback() {
+    local mode="$1"
+    shift
+    __nevo_git_fallback_message
     if command -v opendiff &>/dev/null; then
-        __nevo_git_fallback_message
-        opendiff "$@"
+        if [[ "$mode" = "merge" ]]; then
+            # $1=LOCAL $2=BASE $3=REMOTE $4=MERGED
+            opendiff "$1" "$3" -ancestor "$2" -merge "$4"
+        else
+            opendiff "$@"
+        fi
     else
-        __nevo_git_fallback_message
-        if [ "$1" = "diff" ]; then
-            shift
-            diff "$@"
-        elif [ "$1" = "merge" ]; then
-            shift
+        if [[ "$mode" = "merge" ]]; then
             # $1=LOCAL $2=BASE $3=REMOTE $4=MERGED
             diff3 -m "$1" "$2" "$3" > "$4" 2>/dev/null || diff "$1" "$3"
         else

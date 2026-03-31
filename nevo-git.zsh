@@ -13,7 +13,7 @@ prompt='%10/ ${vcs_info_msg_0_}> '
 
 # Hook: refresh vcs_info before each prompt
 __nevo_git_precmd() { vcs_info }
-precmd_functions+=(__nevo_git_precmd)
+precmd_functions=(${precmd_functions:#__nevo_git_precmd} __nevo_git_precmd)
 
 # ─── Diff/Merge Tool (auto-configured) ───────────────────────────────────────
 
@@ -35,7 +35,7 @@ alias gits="git status"
 gdiff() { git add -N . && git difftool -d "$@"; }
 alias glog="git log --name-only"
 alias gco="git checkout"
-alias gpull="git pull --rebase origin main"
+gpull() { git pull --rebase origin "$(find_main_branch)"; }
 alias gpush="git push"
 alias gpushl="git push --force-with-lease"
 alias gbranch="git branch"
@@ -45,7 +45,13 @@ alias grc='git rebase --continue'
 alias ga='git add --all && git commit --amend'
 alias gresetc='greset $(git rev-parse --abbrev-ref HEAD)'
 alias grebasec='grebase $(git rev-parse --abbrev-ref HEAD)'
-guntrack() { git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"; }
+guntrack() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: guntrack <file>"
+        return 1
+    fi
+    git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"
+}
 alias greflog='git reflog --date=unix'
 alias gsu='git submodule update --init --recursive'
 
@@ -71,7 +77,7 @@ git_url() {
 
 gcom() {
     local branch=$(find_main_branch)
-    git checkout $branch
+    git checkout "$branch"
 }
 
 greset() {
@@ -292,6 +298,11 @@ wtrm() {
     echo "Worktree '$name' removed."
 }
 
+nevo-git-refresh() {
+    rm -f ~/.cache/nevo-git/app-paths
+    echo "Diff/merge tool cache cleared. It will rebuild on next git diff/merge."
+}
+
 # ─── Help Command ────────────────────────────────────────────────────────────
 
 nevo-git() {
@@ -310,7 +321,7 @@ ALIASES
   gits              git status
   glog              git log --name-only
   gco               git checkout
-  gpull             git pull --rebase origin main
+  gpull             git pull --rebase from origin's main branch (auto-detected)
   gpush             git push
   gpushl            git push --force-with-lease
   gbranch           git branch
@@ -340,6 +351,7 @@ BRANCH OPERATIONS
 UTILITIES
   find_main_branch  detect the repo's default branch (main/master/etc)
   git_url           print the HTTPS URL of origin
+  nevo-git-refresh  clear diff/merge tool cache (run after installing an IDE)
 
 WORKTREE MANAGEMENT
   wt <branch>       create/enter a worktree in a sibling -worktrees dir

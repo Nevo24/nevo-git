@@ -52,7 +52,7 @@ git push
 echo ""
 echo "Updating local brew..."
 brew update
-brew upgrade nevo-git
+brew upgrade nevo-git || true
 
 echo ""
 echo "Done! Released and installed $NEW_TAG"
