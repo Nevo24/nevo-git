@@ -22,7 +22,7 @@ __find_app() {
     done
     # JetBrains Toolbox location
     local toolbox_app
-    toolbox_app=$(find "$HOME/Library/Application Support/JetBrains/Toolbox/apps" -name "$binary" -type f -perm +111 2>/dev/null | head -1)
+    toolbox_app=$(find "$HOME/Library/Application Support/JetBrains/Toolbox/apps" -name "$binary" -type f -perm /111 2>/dev/null | head -1)
     if [[ -n "$toolbox_app" ]]; then
         echo "$toolbox_app"
         return 0
@@ -39,6 +39,20 @@ __find_app() {
     return 1
 }
 
+__find_app_multi() {
+    # Try multiple app names in order, return the first found
+    local result
+    while [[ $# -ge 3 ]]; do
+        result=$(__find_app "$1" "$2" "$3")
+        if [[ -n "$result" ]]; then
+            echo "$result"
+            return 0
+        fi
+        shift 3
+    done
+    return 1
+}
+
 __load_cache() {
     if [[ -f "$CACHE_FILE" ]]; then
         local age=$(( $(date +%s) - $(stat -f %m "$CACHE_FILE") ))
@@ -52,12 +66,25 @@ __load_cache() {
 
 __build_cache() {
     mkdir -p "$CACHE_DIR"
-    {
-        echo "PYCHARM_BIN=\"$(__find_app "PyCharm" "com.jetbrains.pycharm" "pycharm" || __find_app "PyCharm CE" "com.jetbrains.pycharm.ce" "pycharm")\""
-        echo "GOLAND_BIN=\"$(__find_app "GoLand" "com.jetbrains.goland" "goland")\""
-        echo "IDEA_BIN=\"$(__find_app "IntelliJ IDEA CE" "com.jetbrains.intellij.ce" "idea" || __find_app "IntelliJ IDEA" "com.jetbrains.intellij" "idea")\""
-        echo "ANDROID_STUDIO_BIN=\"$(__find_app "Android Studio" "com.google.android.studio" "studio")\""
-    } > "$CACHE_FILE"
+
+    local pycharm goland idea android_studio
+    pycharm=$(__find_app_multi \
+        "PyCharm" "com.jetbrains.pycharm" "pycharm" \
+        "PyCharm CE" "com.jetbrains.pycharm.ce" "pycharm")
+    goland=$(__find_app_multi \
+        "GoLand" "com.jetbrains.goland" "goland")
+    idea=$(__find_app_multi \
+        "IntelliJ IDEA CE" "com.jetbrains.intellij.ce" "idea" \
+        "IntelliJ IDEA" "com.jetbrains.intellij" "idea")
+    android_studio=$(__find_app_multi \
+        "Android Studio" "com.google.android.studio" "studio")
+
+    cat > "$CACHE_FILE" <<EOF
+PYCHARM_BIN="$pycharm"
+GOLAND_BIN="$goland"
+IDEA_BIN="$idea"
+ANDROID_STUDIO_BIN="$android_studio"
+EOF
     source "$CACHE_FILE"
 }
 
@@ -103,6 +130,7 @@ __run_fallback() {
             diff "$@"
         elif [ "$1" = "merge" ]; then
             shift
+            # $1=LOCAL $2=BASE $3=REMOTE $4=MERGED
             diff3 -m "$1" "$2" "$3" > "$4" 2>/dev/null || diff "$1" "$3"
         else
             diff "$@"
