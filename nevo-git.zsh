@@ -113,6 +113,18 @@ mr() {
     /usr/bin/open "$mr_url"
 }
 
+pr() {
+    git rev-parse --is-inside-work-tree &>/dev/null || { echo "No git project"; return 1; }
+    local url=$(git_url)
+    local branch=$(git branch --show-current)
+    local owner_repo=$(echo "$url" | sed 's#https://github.com/##; s/\.git$//')
+    local pr_url=$(/usr/bin/curl -s -H "Authorization: token $GITHUB_TOKEN" \
+        "https://api.github.com/repos/${owner_repo}/pulls?head=$(echo "$owner_repo" | cut -d/ -f1):${branch}&state=open" \
+        | /usr/bin/jq -r '.[0].html_url // empty')
+    [ -z "$pr_url" ] && { echo "No PR on this branch"; return 1; }
+    /usr/bin/open "$pr_url"
+}
+
 # ─── Worktree Management ─────────────────────────────────────────────────────
 
 wt() {
@@ -270,6 +282,7 @@ BRANCH OPERATIONS
   gdelete <branch>  delete branch locally and on remote (confirms first)
   new_commit "msg"  amend last commit with a new message (allow-empty)
   mr                open the GitLab MR for the current branch in browser
+  pr                open the GitHub PR for the current branch in browser
 
 UTILITIES
   find_main_branch  detect the repo's default branch (main/master/etc)
