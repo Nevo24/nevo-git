@@ -322,14 +322,6 @@ nevo-git() {
     cat <<'HELP'
 nevo-git — Git shortcuts and worktree management
 
-PROMPT
-  Purple git branch in prompt (auto-configured)
-
-DIFF/MERGE TOOL
-  Auto-configured in git. Detects project type and opens:
-    Android Studio, IntelliJ, PyCharm, or GoLand
-  Falls back to opendiff or plain diff if none installed.
-
 ALIASES
   gits              git status
   glog              git log --name-only
@@ -370,5 +362,13 @@ WORKTREE MANAGEMENT
   wt <branch>       create/enter a worktree in a sibling -worktrees dir
   wtm               jump back to the main repo from a worktree
   wtrm <branch>     remove a worktree (confirms first)
+
+PROMPT
+  Purple git branch in prompt (auto-configured)
+
+DIFF/MERGE TOOL
+  Auto-configured in git. Detects project type and opens:
+    PyCharm, GoLand, IntelliJ, or Android Studio
+  Falls back to opendiff or plain diff if none installed.
 HELP
 }
