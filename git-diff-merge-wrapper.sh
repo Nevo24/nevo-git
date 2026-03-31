@@ -69,7 +69,7 @@ __build_cache() {
 
     local pycharm goland idea android_studio
     pycharm=$(__find_app_multi \
-        "PyCharm" "com.jetbrains.pycharm" "pycharm" \
+        "PyCharm" "com.jetbrains.pycharm.professional" "pycharm" \
         "PyCharm CE" "com.jetbrains.pycharm.ce" "pycharm")
     goland=$(__find_app_multi \
         "GoLand" "com.jetbrains.goland" "goland")

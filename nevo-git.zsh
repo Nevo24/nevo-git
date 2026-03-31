@@ -19,7 +19,6 @@ precmd_functions+=(__nevo_git_precmd)
 
 __nevo_git_wrapper="${0:A:h}/git-diff-merge-wrapper.sh"
 if [[ -x "$__nevo_git_wrapper" ]]; then
-    local __current_diff_cmd
     __current_diff_cmd=$(git config --global --get difftool.custom.cmd 2>/dev/null)
     if [[ "$__current_diff_cmd" != "$__nevo_git_wrapper diff \$LOCAL \$REMOTE" ]]; then
         git config --global diff.tool custom
@@ -33,7 +32,7 @@ fi
 # ─── Aliases ──────────────────────────────────────────────────────────────────
 
 alias gits="git status"
-alias gdiff='git add -N . && git difftool -d "${@: -1}" "${@:1:1}"'
+gdiff() { git add -N . && git difftool -d "$@"; }
 alias glog="git log --name-only"
 alias gco="git checkout"
 alias gpull="git pull --rebase origin main"
@@ -46,7 +45,7 @@ alias grc='git rebase --continue'
 alias ga='git add --all && git commit --amend'
 alias gresetc='greset $(git rev-parse --abbrev-ref HEAD)'
 alias grebasec='grebase $(git rev-parse --abbrev-ref HEAD)'
-alias guntrack='f() { git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"; }; f'
+guntrack() { git rm --cached "$1" && echo "$1" >> .gitignore && git add .gitignore && git commit -m "Remove $1 from version control"; }
 alias greflog='git reflog --date=unix'
 alias gsu='git submodule update --init --recursive'
 
@@ -114,6 +113,10 @@ grename() {
 }
 
 gdelete() {
+    if [[ -z "$1" ]]; then
+        echo "Usage: gdelete <branch-name>"
+        return 1
+    fi
     if read -q "choice?Press Y/y to continue with git-branch-deletion (local and remote) process: "; then
         echo "\ngit push origin --delete $1"
         git push origin --delete "$1"
