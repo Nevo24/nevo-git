@@ -89,6 +89,17 @@ grebasemy() {
     git rebase -X ours "origin/$branch"
 }
 
+grename() {
+    if [[ $# -eq 1 ]]; then
+        git branch -m "$1"
+    elif [[ $# -eq 2 ]]; then
+        git branch -m "$1" "$2"
+    else
+        echo "Usage: grename <new-name>  OR  grename <old-name> <new-name>"
+        return 1
+    fi
+}
+
 gdelete() {
     if read -q "choice?Press Y/y to continue with git-branch-deletion (local and remote) process: "; then
         echo "\ngit push origin --delete $1"
@@ -299,6 +310,7 @@ BRANCH OPERATIONS
   grebase [branch]  pull --rebase from origin/<branch>
   grebasec          grebase on the current branch
   grebasemy [br]    rebase keeping your changes on conflicts (-X ours)
+  grename <new>     rename current branch (or: grename <old> <new>)
   gdelete <branch>  delete branch locally and on remote (confirms first)
   new_commit "msg"  amend last commit with a new message (allow-empty)
   gmr               open the GitLab MR for the current branch in browser
