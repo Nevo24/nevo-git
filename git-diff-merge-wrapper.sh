@@ -122,6 +122,10 @@ __run_tool() {
 __run_fallback() {
     local mode="$1"
     shift
+    # Try all known IDEs in priority order before falling back to opendiff
+    for bin in "$PYCHARM_BIN" "$GOLAND_BIN" "$IDEA_BIN" "$ANDROID_STUDIO_BIN"; do
+        __run_tool "$bin" "$@" && return 0
+    done
     __nevo_git_fallback_message
     if command -v opendiff &>/dev/null; then
         if [[ "$mode" = "merge" ]]; then
