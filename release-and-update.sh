@@ -4,7 +4,7 @@
 
 set -e
 
-FORMULA_REPO="$HOME/workspace/homebrew-nevo"
+FORMULA_REPO="$(brew --repository nevo24/nevo)"
 FORMULA_FILE="$FORMULA_REPO/Formula/nevo-git.rb"
 
 MESSAGE="${1:-release}"
