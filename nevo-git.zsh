@@ -75,7 +75,15 @@ find_main_branch() {
 }
 
 git_url() {
-    git remote get-url origin | sed 's/git@\(.*\):/https:\/\/\1\//'
+    local raw=$(git remote get-url origin)
+    if [[ "$raw" == git@*:* ]]; then
+        local host_alias=${raw#git@}; host_alias=${host_alias%%:*}
+        local path=${raw#*:}; path=${path%.git}
+        local real_host=$(/usr/bin/ssh -G "$host_alias" 2>/dev/null | /usr/bin/awk '/^hostname /{print $2; exit}')
+        echo "https://${real_host:-$host_alias}/$path"
+    else
+        echo "${raw%.git}"
+    fi
 }
 
 # ─── Branch Operations ───────────────────────────────────────────────────────
